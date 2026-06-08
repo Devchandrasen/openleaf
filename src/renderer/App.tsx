@@ -247,15 +247,9 @@ const App: React.FC = () => {
     }
   }, [setProject, refreshFileTree, openFile])
 
-  const handleNewProject = useCallback(async (name?: string, templateId?: string) => {
+  const handleNewProject = useCallback(async (name?: string | null, templateId?: string) => {
     try {
-      let projectName = name
-      if (!projectName) {
-        projectName = prompt('Enter project name:') || ''
-      }
-      if (!projectName) return
-
-      const projectInfo = await window.api.project.create(projectName, templateId)
+      const projectInfo = await window.api.project.create(name || null, templateId)
       setProject(projectInfo)
       await refreshFileTree()
       if (projectInfo.mainFile) {
@@ -317,6 +311,7 @@ const App: React.FC = () => {
     const handleOpenFeedback = () => setIsFeedbackOpen(true)
     const handleOpenShare = () => setIsShareOpen(true)
     const handleOpenAI = () => setIsAIOpen(true)
+    const handleCloseProjectEvent = () => handleCloseProject()
 
     window.addEventListener('keydown', handleKeyDown)
     window.addEventListener('open-table-wizard', handleOpenTable)
@@ -325,6 +320,7 @@ const App: React.FC = () => {
     window.addEventListener('open-feedback-dialog', handleOpenFeedback)
     window.addEventListener('open-share-dialog', handleOpenShare)
     window.addEventListener('open-ai-dialog', handleOpenAI)
+    window.addEventListener('close-project', handleCloseProjectEvent)
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
@@ -334,8 +330,9 @@ const App: React.FC = () => {
       window.removeEventListener('open-feedback-dialog', handleOpenFeedback)
       window.removeEventListener('open-share-dialog', handleOpenShare)
       window.removeEventListener('open-ai-dialog', handleOpenAI)
+      window.removeEventListener('close-project', handleCloseProjectEvent)
     }
-  }, [])
+  }, [handleCloseProject])
 
   // ── Menu Action Listeners ──
   useEffect(() => {

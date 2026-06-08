@@ -41,6 +41,7 @@ export const IPC_CHANNELS = {
   PROJECT_CREATE: 'project:create',
   PROJECT_CLOSE: 'project:close',
   PROJECT_GET_RECENT: 'project:getRecent',
+  PROJECT_CLEAR_RECENT: 'project:clearRecent',
   PROJECT_EXPORT_ZIP: 'project:exportZip',
   PROJECT_IMPORT_ZIP: 'project:importZip',
   PROJECT_SHARE: 'project:share',
@@ -171,9 +172,10 @@ export interface OpenleafAPI {
   }
   project: {
     open: (path: string) => Promise<ProjectInfo>
-    create: (name: string, templateId?: string) => Promise<ProjectInfo>
+    create: (name: string | null, templateId?: string) => Promise<ProjectInfo>
     close: () => Promise<void>
     getRecent: () => Promise<ProjectInfo[]>
+    clearRecent: () => Promise<void>
     exportZip: (destPath: string) => Promise<void>
     share: (projectPath: string) => Promise<string>
     stopSharing: () => Promise<void>

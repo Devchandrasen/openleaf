@@ -44,9 +44,18 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
 
   const handleCreateNewProject = (templateId?: string) => {
     setShowTemplateDropdown(false)
-    const name = prompt('Enter project name:')
-    if (!name) return
-    onNewProject(name, templateId)
+    onNewProject('', templateId)
+  }
+
+  const handleClearHistory = async () => {
+    try {
+      if (window.api?.project?.clearRecent) {
+        await window.api.project.clearRecent()
+        setRecentProjects([])
+      }
+    } catch (err) {
+      console.error('Failed to clear history:', err)
+    }
   }
 
   const filteredProjects = recentProjects.filter((p) =>
@@ -106,7 +115,17 @@ export const WelcomeScreen: React.FC<WelcomeScreenProps> = ({
       {/* Main Content Area */}
       <div className="welcome-main">
         <div className="welcome-header">
-          <h1>My Projects</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <h1>My Projects</h1>
+            {recentProjects.length > 0 && (
+              <button 
+                onClick={handleClearHistory}
+                style={{ background: 'transparent', border: '1px solid var(--border-default)', padding: '4px 8px', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', color: 'var(--text-secondary)' }}
+              >
+                Clear History
+              </button>
+            )}
+          </div>
           <div className="welcome-search-box">
             <input
               type="text"

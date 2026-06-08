@@ -552,27 +552,27 @@ export function registerFileHandlers(ipcMain: IpcMain, getMainWindow: () => Brow
 
   ipcMain.handle(
     IPC_CHANNELS.PROJECT_CREATE,
-    async (_event, name: string, templateId?: string): Promise<ProjectInfo> => {
+    async (_event, _name: string | null, templateId?: string): Promise<ProjectInfo> => {
       try {
         // Show folder picker for project location
         const parent = parentWindowGetter()
         const result = await dialog.showOpenDialog(parent ? parent : undefined as any, {
-          title: 'Select location for new project',
-          properties: ['openDirectory']
+          title: 'Select an empty folder for your new project',
+          properties: ['openDirectory', 'createDirectory']
         })
 
         if (result.canceled || result.filePaths.length === 0) {
           throw new Error('Project creation cancelled: no location selected.')
         }
 
-        const parentDir = result.filePaths[0]
-        const projectPath = path.join(parentDir, name)
+        const projectPath = result.filePaths[0]
+        const name = path.basename(projectPath)
 
-        if (fs.existsSync(projectPath)) {
-          throw new Error(`A folder named "${name}" already exists in the selected location.`)
+        // Check if directory is empty
+        const files = fs.readdirSync(projectPath)
+        if (files.length > 0 && files.some(f => !f.startsWith('.'))) {
+          throw new Error('Please select an empty directory for a new project.')
         }
-
-        fs.mkdirSync(projectPath, { recursive: true })
 
         // Create the main .tex file from template
         const mainFileName = 'main.tex'
@@ -696,6 +696,10 @@ Your letter content here.
       saveRecentProjects(valid)
     }
     return valid
+  })
+
+  ipcMain.handle(IPC_CHANNELS.PROJECT_CLEAR_RECENT, async (): Promise<void> => {
+    saveRecentProjects([])
   })
 
   ipcMain.handle(IPC_CHANNELS.PROJECT_CLOSE, async (): Promise<void> => {

@@ -40,6 +40,7 @@ const api: OpenleafAPI = {
     create: (name, templateId?) => ipcRenderer.invoke(IPC_CHANNELS.PROJECT_CREATE, name, templateId),
     close: () => ipcRenderer.invoke(IPC_CHANNELS.PROJECT_CLOSE),
     getRecent: () => ipcRenderer.invoke(IPC_CHANNELS.PROJECT_GET_RECENT),
+    clearRecent: () => ipcRenderer.invoke(IPC_CHANNELS.PROJECT_CLEAR_RECENT),
     exportZip: (destPath) => ipcRenderer.invoke(IPC_CHANNELS.PROJECT_EXPORT_ZIP, destPath),
     share: (projectPath) => ipcRenderer.invoke(IPC_CHANNELS.PROJECT_SHARE, projectPath),
     stopSharing: () => ipcRenderer.invoke(IPC_CHANNELS.PROJECT_SHARE_STOP)

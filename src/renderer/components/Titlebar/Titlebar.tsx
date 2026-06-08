@@ -27,6 +27,14 @@ export const Titlebar: React.FC = () => {
             <span className="titlebar-project-name">
               {currentProject.name}
             </span>
+            <button
+              className="titlebar-btn"
+              style={{ width: 'auto', padding: '0 8px', marginLeft: '8px', fontSize: '11px', background: 'transparent' }}
+              onClick={() => window.dispatchEvent(new CustomEvent('close-project'))}
+              title="Close Project and Return to Home"
+            >
+              🏠 Home
+            </button>
           </>
         )}
       </div>
