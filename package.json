@@ -1,9 +1,9 @@
 {
   "name": "openleaf",
-  "version": "1.0.0",
-  "description": "Openleaf — A free, open-source LaTeX editor for Windows with real-time PDF preview",
+  "version": "1.0.1",
+  "description": "An open-source local LaTeX editor with real-time PDF preview",
   "main": "./dist/main/index.js",
-  "author": "Openleaf Contributors",
+  "author": "Dr Chandrasen Pandey",
   "license": "MIT",
   "scripts": {
     "dev": "electron-vite dev",
